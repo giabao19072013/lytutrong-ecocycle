@@ -139,7 +139,8 @@ function AppContent() {
 
           <div className="border-t border-gray-50 pt-4 mt-6 text-center text-[10px] text-gray-400 font-semibold space-y-1">
             <p>© 2026 EcoCycle School</p>
-            <p>THCS Lý Tự Trọng • Bình Dương</p>
+            <p>THCS Lý Tự Trọng</p>
+            <p className="px-2 leading-relaxed text-[9px] text-gray-400 font-normal">578 LE DUC THO, AN HOI DONG WARD, HO CHI MINH CITY</p>
           </div>
         </aside>
 

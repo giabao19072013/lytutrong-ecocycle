@@ -25,6 +25,8 @@ interface StateContextType {
   deleteByproduct: (id: string) => void;
   addFlow: (f: Omit<Flow, 'id'>) => void;
   deleteFlow: (id: string) => void;
+  addLocation: (loc: Omit<SchoolLocation, 'id'>) => void;
+  deleteLocation: (id: string) => void;
   updateLocationStatus: (id: string, status: string, byproduct: string, mass: number, handler: string) => void;
   addLogEntry: (log: Omit<LogEntry, 'id'>) => void;
   deleteLogEntry: (id: string) => void;
@@ -209,6 +211,18 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const deleteFlow = (id: string) => {
     setFlows(prev => prev.filter(flow => flow.id !== id));
+  };
+
+  const addLocation = (loc: Omit<SchoolLocation, 'id'>) => {
+    const newLoc: SchoolLocation = {
+      ...loc,
+      id: 'loc_' + Math.random().toString(36).substr(2, 9)
+    };
+    setLocations(prev => [...prev, newLoc]);
+  };
+
+  const deleteLocation = (id: string) => {
+    setLocations(prev => prev.filter(loc => loc.id !== id));
   };
 
   const updateLocationStatus = (id: string, status: string, byproduct: string, mass: number, handler: string) => {
@@ -399,6 +413,8 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       deleteByproduct,
       addFlow,
       deleteFlow,
+      addLocation,
+      deleteLocation,
       updateLocationStatus,
       addLogEntry,
       deleteLogEntry,
