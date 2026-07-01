@@ -5,7 +5,7 @@ import { Trash2, Plus, Filter, Search, Calendar, MapPin, User, CheckCircle2, X, 
 import { motion } from 'motion/react';
 
 export const ByproductManager: React.FC = () => {
-  const { byproducts, addByproduct, deleteByproduct, updateByproduct } = useAppState();
+  const { byproducts, locations, addByproduct, deleteByproduct, updateByproduct } = useAppState();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('Tất cả');
@@ -323,14 +323,27 @@ export const ByproductManager: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1">Nguồn phát sinh</label>
-                  <input
-                    type="text"
-                    required
+                  <label className="block text-xs font-bold text-gray-600 mb-1">Nguồn phát sinh (Bản đồ số)</label>
+                  <select
                     value={source}
                     onChange={e => setSource(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 text-sm text-gray-700 focus:outline-emerald-500"
-                  />
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 text-sm text-gray-700 focus:outline-emerald-500 font-semibold"
+                  >
+                    {locations.map(loc => {
+                      let typeLabel = '';
+                      if (loc.type === 'garden') typeLabel = 'Vườn trường';
+                      else if (loc.type === 'canteen') typeLabel = 'Căn tin';
+                      else if (loc.type === 'class') typeLabel = 'Lớp học';
+                      else if (loc.type === 'yard') typeLabel = 'Sân trường';
+                      else if (loc.type === 'green') typeLabel = 'Khu cây xanh';
+                      return (
+                        <option key={loc.id} value={loc.name}>
+                          {loc.name} ({typeLabel})
+                        </option>
+                      );
+                    })}
+                    <option value="Khu vực ngoại cảnh khác">Khu vực ngoại cảnh khác</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1">Ngày thu hoạch</label>

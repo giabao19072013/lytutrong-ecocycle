@@ -5,7 +5,7 @@ import { ArrowDown, Plus, Trash2, Check, BookOpen, Save, Layers, RefreshCw, Spar
 import { motion } from 'motion/react';
 
 export const FlowBuilder: React.FC = () => {
-  const { flows, addFlow } = useAppState();
+  const { flows, addFlow, deleteFlow } = useAppState();
 
   const [byproductType, setByproductType] = useState('Lá cây');
   const [flowName, setFlowName] = useState('Quy trình xử lý tự chế');
@@ -279,9 +279,22 @@ export const FlowBuilder: React.FC = () => {
               <div>
                 <div className="flex justify-between items-start gap-2">
                   <h4 className="font-bold text-xs text-gray-800 leading-normal">{flow.name}</h4>
-                  <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full shrink-0">
-                    {flow.byproductType}
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                      {flow.byproductType}
+                    </span>
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`Bạn có chắc chắn muốn xóa quy trình "${flow.name}"?`)) {
+                          deleteFlow(flow.id);
+                        }
+                      }}
+                      className="text-gray-400 hover:text-rose-600 p-1 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
+                      title="Xóa quy trình"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-[10px] text-gray-400 mt-1">Sản phẩm đầu ra: <strong>{flow.outputName} ({flow.outputUnit})</strong></p>
               </div>

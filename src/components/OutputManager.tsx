@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { useAppState } from '../data/StateContext';
 import { OutputProduct } from '../types';
-import { DollarSign, ShieldCheck, ShoppingCart, RefreshCw, Layers, Plus, TrendingUp, Info } from 'lucide-react';
+import { DollarSign, ShieldCheck, ShoppingCart, RefreshCw, Layers, Plus, TrendingUp, Info, Trash2, X } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const OutputManager: React.FC = () => {
-  const { outputs, useOutputProduct, sellOutputProduct, updateOutputProduct } = useAppState();
+  const { outputs, useOutputProduct, sellOutputProduct, updateOutputProduct, addOutputProduct, deleteOutputProduct } = useAppState();
 
   const [selectedProduct, setSelectedProduct] = useState<OutputProduct | null>(outputs[0] || null);
   const [useAmount, setUseAmount] = useState('');
   const [sellAmount, setSellAmount] = useState('');
   const [sellPrice, setSellPrice] = useState('');
+
+  // Form states for adding new output product
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newProdName, setNewProdName] = useState('');
+  const [newProdUnit, setNewProdUnit] = useState('kg');
+  const [newProdTotal, setNewProdTotal] = useState('');
 
   const [feedback, setFeedback] = useState({ text: '', type: '' });
 
@@ -62,14 +68,38 @@ export const OutputManager: React.FC = () => {
     setSellAmount('');
   };
 
+  const handleAddProductSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProdName) return;
+    addOutputProduct({
+      name: newProdName,
+      unit: newProdUnit,
+      totalProduced: Number(newProdTotal) || 0,
+      used: 0,
+      sold: 0,
+      revenue: 0
+    });
+    setNewProdName('');
+    setNewProdTotal('');
+    setShowAddForm(false);
+  };
+
   return (
     <div className="space-y-6" id="output-manager-section">
       {/* Page Header */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-        <h2 className="text-xl font-display font-bold text-gray-800 flex items-center gap-2">
-          📦 Quản lý kho sản phẩm đầu ra của trường
-        </h2>
-        <p className="text-gray-400 text-xs mt-0.5">Theo dõi số lượng phân bón hữu cơ hoai mục, tiền giấy kế hoạch nhỏ, sen đá quy đổi và dòng tài chính tuần hoàn.</p>
+      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-display font-bold text-gray-800 flex items-center gap-2">
+            📦 Quản lý kho sản phẩm đầu ra của trường
+          </h2>
+          <p className="text-gray-400 text-xs mt-0.5">Theo dõi số lượng phân bón hữu cơ hoai mục, tiền giấy kế hoạch nhỏ, sen đá quy đổi và dòng tài chính tuần hoàn.</p>
+        </div>
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-2 self-start md:self-auto shadow-sm"
+        >
+          <Plus className="w-4 h-4" /> Thêm sản phẩm mới
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -94,7 +124,21 @@ export const OutputManager: React.FC = () => {
                     <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-md uppercase">
                       MÃ KHO: {prod.id.toUpperCase()}
                     </span>
-                    <span className="text-xs text-gray-400 font-medium">Lượng thành phẩm</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm đầu ra "${prod.name}" khỏi danh mục kho của trường?`)) {
+                          deleteOutputProduct(prod.id);
+                          if (selectedProduct?.id === prod.id) {
+                            setSelectedProduct(null);
+                          }
+                        }
+                      }}
+                      className="text-gray-400 hover:text-rose-600 p-1 hover:bg-rose-50 rounded-md transition-all shrink-0 cursor-pointer"
+                      title="Xóa sản phẩm này"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                   <h3 className="font-display font-extrabold text-lg text-gray-800 mt-2">{prod.name}</h3>
                 </div>
@@ -115,13 +159,19 @@ export const OutputManager: React.FC = () => {
                 </div>
 
                 {prod.revenue > 0 && (
-                  <div className="absolute top-2 right-2 bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shadow-sm">
+                  <div className="absolute top-2 right-10 bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shadow-sm">
                     <TrendingUp className="w-3 h-3" /> +{prod.revenue.toLocaleString()}đ
                   </div>
                 )}
               </motion.div>
             );
           })}
+
+          {outputs.length === 0 && (
+            <div className="col-span-full py-16 text-center border border-dashed border-gray-200 rounded-2xl bg-gray-50 text-gray-400 text-xs">
+              Kho của trường chưa ghi nhận thành phẩm nào. Hãy thiết kế quy trình và chạy thử mô phỏng hoặc nhấn nút "Thêm sản phẩm mới" phía trên để khai báo sản phẩm thực tế!
+            </div>
+          )}
         </div>
 
         {/* Thao tác Xuất kho / Bán kho (4 phần) */}
@@ -159,11 +209,11 @@ export const OutputManager: React.FC = () => {
                     placeholder={`Số ${selectedProduct.unit} dùng`}
                     value={useAmount}
                     onChange={e => setUseAmount(e.target.value)}
-                    className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-emerald-500 text-gray-700"
+                    className="flex-1 bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-emerald-500 text-gray-700 font-medium"
                   />
                   <button
                     type="submit"
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition-colors cursor-pointer"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition-colors cursor-pointer shrink-0"
                   >
                     Bón cây / Xuất dùng
                   </button>
@@ -171,7 +221,7 @@ export const OutputManager: React.FC = () => {
               </form>
 
               {/* Form 2: Thương mại hóa lấy kinh phí */}
-              {['op2', 'op3', 'op4'].includes(selectedProduct.id) && (
+              {['op1', 'op2', 'op3', 'op4'].includes(selectedProduct.id) || selectedProduct.id.startsWith('op_') ? (
                 <form onSubmit={handleSell} className="space-y-3 border-t border-gray-100 pt-5">
                   <h4 className="font-bold text-xs text-amber-800 uppercase tracking-wider flex items-center gap-1.5">
                     <ShoppingCart className="w-3.5 h-3.5 text-amber-600" /> Bán thương mại thu quỹ kế hoạch nhỏ
@@ -185,7 +235,7 @@ export const OutputManager: React.FC = () => {
                         placeholder={`Số ${selectedProduct.unit} bán`}
                         value={sellAmount}
                         onChange={e => setSellAmount(e.target.value)}
-                        className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-emerald-500 text-gray-700"
+                        className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-emerald-500 text-gray-700 font-medium"
                       />
                       <input
                         type="number"
@@ -193,7 +243,7 @@ export const OutputManager: React.FC = () => {
                         placeholder="Giá bán / Đơn vị"
                         value={sellPrice}
                         onChange={e => setSellPrice(e.target.value)}
-                        className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-emerald-500 text-gray-700 font-mono"
+                        className="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-emerald-500 text-gray-700 font-mono font-medium"
                       />
                     </div>
                     <button
@@ -204,7 +254,7 @@ export const OutputManager: React.FC = () => {
                     </button>
                   </div>
                 </form>
-              )}
+              ) : null}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center text-gray-400 space-y-2">
@@ -225,6 +275,86 @@ export const OutputManager: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Add New Output Product Modal */}
+      {showAddForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative"
+          >
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-700 p-1 rounded-lg cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-lg font-display font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">
+              ➕ Thêm sản phẩm đầu ra mới vào kho
+            </h3>
+
+            <form onSubmit={handleAddProductSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1">Tên thành phẩm đầu ra</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ví dụ: Đồ dùng STEM từ nhựa, Men vi sinh vi sinh..."
+                  value={newProdName}
+                  onChange={e => setNewProdName(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 text-sm text-gray-700 focus:outline-emerald-500 font-semibold"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1">Đơn vị đo lường</label>
+                  <select
+                    value={newProdUnit}
+                    onChange={e => setNewProdUnit(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 text-sm text-gray-700 focus:outline-emerald-500 font-semibold"
+                  >
+                    <option value="kg">kg (Kilôgam)</option>
+                    <option value="lít">lít</option>
+                    <option value="cái">cái (Sản phẩm)</option>
+                    <option value="phần">phần (Quà đổi)</option>
+                    <option value="chậu">chậu (Cây giống)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1">Số lượng tồn kho ban đầu</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="Mặc định: 0"
+                    value={newProdTotal}
+                    onChange={e => setNewProdTotal(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 text-sm text-gray-700 focus:outline-emerald-500 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 border-t border-gray-100 pt-4 mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddForm(false)}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer shadow-sm"
+                >
+                  Khai báo thêm
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

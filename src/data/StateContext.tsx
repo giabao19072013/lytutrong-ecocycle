@@ -24,10 +24,13 @@ interface StateContextType {
   updateByproduct: (id: string, b: Partial<Byproduct>) => void;
   deleteByproduct: (id: string) => void;
   addFlow: (f: Omit<Flow, 'id'>) => void;
+  deleteFlow: (id: string) => void;
   updateLocationStatus: (id: string, status: string, byproduct: string, mass: number, handler: string) => void;
   addLogEntry: (log: Omit<LogEntry, 'id'>) => void;
   deleteLogEntry: (id: string) => void;
+  addOutputProduct: (p: Omit<OutputProduct, 'id'>) => void;
   updateOutputProduct: (id: string, updates: Partial<OutputProduct>) => void;
+  deleteOutputProduct: (id: string) => void;
   useOutputProduct: (id: string, amount: number) => boolean;
   sellOutputProduct: (id: string, amount: number, pricePerUnit: number) => boolean;
   addCompareMethod: (cm: CompareMethod) => void;
@@ -204,6 +207,10 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setFlows(prev => [...prev, newFlow]);
   };
 
+  const deleteFlow = (id: string) => {
+    setFlows(prev => prev.filter(flow => flow.id !== id));
+  };
+
   const updateLocationStatus = (id: string, status: string, byproduct: string, mass: number, handler: string) => {
     setLocations(prev => prev.map(loc => loc.id === id ? {
       ...loc,
@@ -226,8 +233,20 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLogs(prev => prev.filter(log => log.id !== id));
   };
 
+  const addOutputProduct = (p: Omit<OutputProduct, 'id'>) => {
+    const newProd: OutputProduct = {
+      ...p,
+      id: 'op_' + Math.random().toString(36).substr(2, 9)
+    };
+    setOutputs(prev => [...prev, newProd]);
+  };
+
   const updateOutputProduct = (id: string, updates: Partial<OutputProduct>) => {
     setOutputs(prev => prev.map(prod => prod.id === id ? { ...prod, ...updates } : prod));
+  };
+
+  const deleteOutputProduct = (id: string) => {
+    setOutputs(prev => prev.filter(prod => prod.id !== id));
   };
 
   const useOutputProduct = (id: string, amount: number): boolean => {
@@ -379,10 +398,13 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       updateByproduct,
       deleteByproduct,
       addFlow,
+      deleteFlow,
       updateLocationStatus,
       addLogEntry,
       deleteLogEntry,
+      addOutputProduct,
       updateOutputProduct,
+      deleteOutputProduct,
       useOutputProduct,
       sellOutputProduct,
       addCompareMethod,

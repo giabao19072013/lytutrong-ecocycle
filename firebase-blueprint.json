@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "Byproduct": {
+      "title": "Byproduct",
+      "description": "Represents an agricultural or school organic/recyclable byproduct",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "source": { "type": "string" },
+        "mass": { "type": "number" },
+        "date": { "type": "string" },
+        "status": { "type": "string" },
+        "handler": { "type": "string" },
+        "notes": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "source", "mass", "date", "status", "handler"]
+    },
+    "SchoolLocation": {
+      "title": "SchoolLocation",
+      "description": "Represents a location on the digital school map",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "gridPos": { "type": "object" },
+        "activeByproduct": { "type": "string" },
+        "mass": { "type": "number" },
+        "status": { "type": "string" },
+        "handler": { "type": "string" }
+      },
+      "required": ["id", "name", "type", "gridPos", "activeByproduct", "mass", "status", "handler"]
+    },
+    "Flow": {
+      "title": "Flow",
+      "description": "Represents a circular economy processing flow designed by students",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "byproductType": { "type": "string" },
+        "steps": { "type": "array" },
+        "outputName": { "type": "string" },
+        "outputUnit": { "type": "string" },
+        "conversionRate": { "type": "number" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "name", "byproductType", "steps", "outputName", "outputUnit", "conversionRate"]
+    },
+    "LogEntry": {
+      "title": "LogEntry",
+      "description": "A historic log entry of byproduct processing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "byproductName": { "type": "string" },
+        "mass": { "type": "number" },
+        "status": { "type": "string" },
+        "handler": { "type": "string" }
+      },
+      "required": ["id", "date", "byproductName", "mass", "status", "handler"]
+    },
+    "OutputProduct": {
+      "title": "OutputProduct",
+      "description": "Represents a processed product stored in the school store",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "totalProduced": { "type": "number" },
+        "used": { "type": "number" },
+        "sold": { "type": "number" },
+        "revenue": { "type": "number" },
+        "unit": { "type": "string" }
+      },
+      "required": ["id", "name", "totalProduced", "used", "sold", "revenue", "unit"]
+    },
+    "GreenScoreDetail": {
+      "title": "GreenScoreDetail",
+      "description": "Green score metric details for a period",
+      "type": "object",
+      "properties": {
+        "reuseRate": { "type": "number" },
+        "wasteReduced": { "type": "number" },
+        "compostProduced": { "type": "number" },
+        "recycledPlastic": { "type": "number" },
+        "gardenedArea": { "type": "number" },
+        "totalScore": { "type": "number" }
+      },
+      "required": ["reuseRate", "wasteReduced", "compostProduced", "recycledPlastic", "gardenedArea", "totalScore"]
+    },
+    "EcocycleState": {
+      "title": "EcocycleState",
+      "description": "Combined global state document for the application",
+      "type": "object",
+      "properties": {
+        "byproducts": { "type": "array" },
+        "locations": { "type": "array" },
+        "flows": { "type": "array" },
+        "compare_methods": { "type": "array" },
+        "logs": { "type": "array" },
+        "outputs": { "type": "array" },
+        "scores": { "type": "object" }
+      }
+    }
+  },
+  "firestore": {
+    "ecocycle_data/global_state": {
+      "schema": "EcocycleState",
+      "description": "Stores all school circular economy simulation and data models"
+    }
+  }
+}
