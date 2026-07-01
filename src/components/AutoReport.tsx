@@ -20,9 +20,153 @@ export const AutoReport: React.FC = () => {
 
     setTimeout(() => {
       setIsExporting(false);
-      setSuccessMsg('🎉 Báo cáo tự động đã được tổng hợp định dạng PDF và tải xuống thành công thiết bị của bạn!');
-      setTimeout(() => setSuccessMsg(''), 6000);
-    }, 2500);
+      
+      // Build an beautiful, styled HTML report content with live data
+      const periodText = activePeriod === 'month' ? 'THÁNG 07/2026' : activePeriod === 'semester' ? 'HỌC KỲ I' : 'NIÊN HÓA 2025 - 2026';
+      const byproductRows = byproducts.slice(0, 6).map(b => `
+        <div style="padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
+          <span style="font-size: 11px; color: #6b7280; font-weight: bold; text-transform: uppercase; display: block;">${b.name}</span>
+          <strong style="font-size: 18px; color: #1f2937; display: block; margin: 8px 0;">${b.mass} kg</strong>
+          <span style="font-size: 11px; color: #059669; font-weight: bold;">${b.source}</span>
+        </div>
+      `).join('');
+
+      const htmlContent = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bao_Cao_Tuan_Hoan_EcoCycle_School</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1f2937; line-height: 1.6; padding: 40px; max-width: 800px; margin: 0 auto; background: #fff; }
+    .header { display: flex; justify-content: space-between; border-bottom: 3px solid #065f46; padding-bottom: 20px; margin-bottom: 30px; }
+    .header-left { text-align: left; }
+    .header-right { text-align: right; }
+    .title-sec { text-align: center; margin: 30px 0; }
+    .title-sec h1 { font-size: 22px; margin: 0; color: #111827; letter-spacing: 0.5px; }
+    .title-sec p { font-size: 12px; color: #065f46; font-weight: bold; margin-top: 5px; }
+    .section { margin-bottom: 30px; }
+    .section-title { font-size: 14px; color: #111827; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; margin-bottom: 15px; font-weight: bold; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 15px; border-radius: 8px; }
+    .footer-signs { display: grid; grid-template-columns: repeat(2, 1fr); margin-top: 60px; text-align: center; font-size: 13px; }
+    @media print {
+      body { padding: 0; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <p style="font-size: 11px; font-weight: bold; color: #6b7280; margin: 0; text-transform: uppercase;">SỞ GIÁO DỤC VÀ ĐÀO TẠO</p>
+      <h4 style="font-size: 13px; margin: 3px 0 0 0; color: #1f2937; font-weight: bold;">TRƯỜNG TRUNG HỌC CƠ SỞ LÝ TỰ TRỌNG</h4>
+      <p style="font-size: 10px; color: #9ca3af; margin: 2px 0 0 0;">578 Lê Đức Thọ, Phường An Hội Đông, TP. Hồ Chí Minh</p>
+    </div>
+    <div class="header-right">
+      <p style="font-size: 11px; font-weight: bold; color: #6b7280; margin: 0;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
+      <p style="font-size: 10px; font-weight: bold; color: #374151; margin: 3px 0 0 0; text-decoration: underline;">Độc lập - Tự do - Hạnh phúc</p>
+      <p style="font-size: 10px; color: #9ca3af; margin: 8px 0 0 0;">TP. Hồ Chí Minh, ngày 01 tháng 07 năm 2026</p>
+    </div>
+  </div>
+
+  <div class="title-sec">
+    <h1>BÁO CÁO KẾT QUẢ MÔ HÌNH KINH TẾ TUẦN HOÀN ECOCYCLE SCHOOL</h1>
+    <p>THỜI KỲ TỔNG HỢP: ${periodText}</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">I. TỔNG QUAN CHUNG (EXECUTIVE SUMMARY)</div>
+    <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 12px; text-align: justify; line-height: 1.7;">
+      Báo cáo này tổng hợp kết quả vận hành thực nghiệm chương trình tuần hoàn phụ phẩm học đường EcoCycle tại THCS Lý Tự Trọng. Nhờ tích cực triển khai phong trào ủ phân hữu cơ vi sinh compost từ lá cây, rác cỏ cắt rụng và thu hồi vỏ chai nhựa, giấy vụn học sinh tại nguồn, nhà trường đã đạt tỷ suất tái chế đáng kinh ngạc lên đến <strong>${currentScore.reuseRate}%</strong>, giảm thiểu đáng kể chi phí rác chôn lấp đô thị, góp phần giáo dục ý thức bảo vệ môi trường bền vững thế hệ trẻ.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">II. SỐ LIỆU PHỤ PHẨM THU GOM ĐẦU VÀO</div>
+    <div class="grid-4">
+      ${byproductRows}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">III. SƠ ĐỒ QUY TRÌNH TUẦN HOÀN MẪU (FLOW DIAGRAM)</div>
+    <div style="display: flex; gap: 10px; font-size: 11px; justify-content: space-between; margin-top: 10px; background: #ecfdf5; padding: 15px; border-radius: 8px; border: 1px solid #a7f3d0;">
+      <div style="background: white; border: 1px solid #a7f3d0; padding: 10px; border-radius: 6px; flex: 1; text-align: center;">
+        <strong style="color: #065f46; display: block;">1. Thu gom lá rụng</strong>
+        <span style="color: #9ca3af; font-size: 9px;">Sân trường & Khu cây xanh</span>
+      </div>
+      <div style="background: white; border: 1px solid #a7f3d0; padding: 10px; border-radius: 6px; flex: 1; text-align: center;">
+        <strong style="color: #065f46; display: block;">2. Sàng phân loại</strong>
+        <span style="color: #9ca3af; font-size: 9px;">Tách rời sỏi, nilon thô</span>
+      </div>
+      <div style="background: white; border: 1px solid #a7f3d0; padding: 10px; border-radius: 6px; flex: 1; text-align: center;">
+        <strong style="color: #065f46; display: block;">3. Ủ hoai vi sinh</strong>
+        <span style="color: #9ca3af; font-size: 9px;">Thời gian 45 ngày</span>
+      </div>
+      <div style="background: white; border: 1px solid #a7f3d0; padding: 10px; border-radius: 6px; flex: 1; text-align: center;">
+        <strong style="color: #065f46; display: block;">4. Compost bón cây</strong>
+        <span style="color: #9ca3af; font-size: 9px;">Trả lại mùn tự nhiên cho đất</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">IV. HIỆU QUẢ KINH TẾ VÀ TÁC ĐỘNG MÔI TRƯỜNG</div>
+    <div class="grid" style="font-size: 11px;">
+      <div class="card">
+        <strong style="color: #065f46; font-size: 12px; display: block; margin-bottom: 5px;">Môi trường tự nhiên</strong>
+        Giảm thiểu chôn lấp <strong>${currentScore.wasteReduced}kg</strong> rác thải thô. Tiêu biến dấu chân carbon tránh phát thải <strong>${currentScore.wasteReduced * 2}kg CO₂e</strong> khí thải hiệu ứng nhà kính.
+      </div>
+      <div class="card">
+        <strong style="color: #1e3a8a; font-size: 12px; display: block; margin-bottom: 5px;">Tài nguyên bổ sung</strong>
+        Sản xuất thành phẩm đạt <strong>${currentScore.compostProduced}kg</strong> phân mùn hữu cơ hoạt tính cao, bón lại bồi dưỡng cho <strong>${currentScore.gardenedArea}m²</strong> cây xanh cảnh quan trường học.
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="border-top: 1px solid #e5e7eb; padding-top: 15px; display: flex; justify-content: space-between; font-size: 12px;">
+    <div>
+      <span style="font-weight: bold; color: #4b5563;">ĐIỂM TRƯỜNG HỌC XANH TIÊU BIỂU:</span>
+      <strong style="color: #047857; font-size: 15px;"> ${currentScore.totalScore}/100</strong>
+    </div>
+    <div style="font-weight: bold; color: #047857; background: #ecfdf5; padding: 4px 10px; border-radius: 4px;">
+      HẠNG A+ TIÊN PHONG
+    </div>
+  </div>
+
+  <div class="footer-signs">
+    <div>
+      <strong style="color: #4b5563; text-transform: uppercase;">Đại diện Liên đội / Học sinh</strong>
+      <p style="color: #9ca3af; margin-top: 50px;">(Ký và ghi rõ họ tên)</p>
+    </div>
+    <div>
+      <strong style="color: #1f2937; text-transform: uppercase;">HIỆU TRƯỞNG NHÀ TRƯỜNG</strong>
+      <p style="color: #9ca3af; margin-top: 50px;">(Ký tên và đóng dấu duyệt)</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      // Trigger automatic file download
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Bao_Cao_Tuan_Hoan_EcoCycle_School_${activePeriod}.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setSuccessMsg('🎉 Tải xuống tệp báo cáo thành công! Tệp tin đã được lưu dưới dạng tài liệu Web chuẩn. Bạn cũng có thể xem trực tiếp hộp thoại In (Print) đang mở để lưu trực tiếp thành định dạng file PDF chất lượng cao nhất.');
+      
+      // Auto-trigger native print dialogue as a handy alternative to obtain real PDF
+      window.print();
+
+      setTimeout(() => setSuccessMsg(''), 10000);
+    }, 1500);
   };
 
   return (
@@ -86,12 +230,12 @@ export const AutoReport: React.FC = () => {
           <div className="text-center md:text-left">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">SỞ GIÁO DỤC VÀ ĐÀO TẠO</p>
             <h4 className="font-display font-black text-gray-800 text-sm">TRƯỜNG TRUNG HỌC CƠ SỞ LÝ TỰ TRỌNG</h4>
-            <p className="text-[10px] text-gray-400 mt-1">Đường 22/12, THCS Lý Tự Trọng, Bình Dương</p>
+            <p className="text-[10px] text-gray-400 mt-1">578 Lê Đức Thọ, Phường An Hội Đông, TP. Hồ Chí Minh</p>
           </div>
           <div className="text-center md:text-right">
             <p className="text-xs font-bold text-gray-500">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
             <p className="text-[10px] font-bold text-gray-700 underline mt-0.5">Độc lập - Tự do - Hạnh phúc</p>
-            <p className="text-[10px] text-gray-400 mt-2">Bình Dương, ngày 01 tháng 07 năm 2026</p>
+            <p className="text-[10px] text-gray-400 mt-2">TP. Hồ Chí Minh, ngày 01 tháng 07 năm 2026</p>
           </div>
         </div>
 

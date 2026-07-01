@@ -11,6 +11,7 @@ import { OutputManager } from './components/OutputManager';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { GreenScore } from './components/GreenScore';
 import { AutoReport } from './components/AutoReport';
+import { AcademicLibrary } from './components/AcademicLibrary';
 
 import {
   LayoutDashboard,
@@ -26,7 +27,8 @@ import {
   FileText,
   Menu,
   X,
-  Leaf
+  Leaf,
+  GraduationCap
 } from 'lucide-react';
 
 function AppContent() {
@@ -36,6 +38,7 @@ function AppContent() {
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard tổng quan', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'map', label: 'Bản đồ số', icon: <Map className="w-4 h-4" /> },
+    { id: 'academic', label: 'Học tập & Cẩm nang', icon: <GraduationCap className="w-4 h-4" /> },
     { id: 'byproducts', label: 'Quản lý phụ phẩm', icon: <ClipboardList className="w-4 h-4" /> },
     { id: 'flow', label: 'Thiết kế quy trình', icon: <GitFork className="w-4 h-4" /> },
     { id: 'simulation', label: 'Mô phỏng quy trình', icon: <Play className="w-4 h-4" /> },
@@ -53,6 +56,8 @@ function AppContent() {
         return <DashboardOverview onViewChange={(view) => setActiveTab(view)} />;
       case 'map':
         return <CampusMap />;
+      case 'academic':
+        return <AcademicLibrary />;
       case 'byproducts':
         return <ByproductManager />;
       case 'flow':
