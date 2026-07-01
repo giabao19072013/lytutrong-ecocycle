@@ -1,0 +1,6 @@
+{
+  "name": "EcoCycle School",
+  "description": "Hệ thống quản lý, mô phỏng và đánh giá mô hình kinh tế tuần hoàn tại THCS Lý Tự Trọng",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
