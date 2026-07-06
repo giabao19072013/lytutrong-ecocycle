@@ -138,12 +138,14 @@ export const AutoReport: React.FC = () => {
 
   <div class="footer-signs">
     <div>
-      <strong style="color: #4b5563; text-transform: uppercase;">Đại diện Liên đội / Học sinh</strong>
-      <p style="color: #9ca3af; margin-top: 50px;">(Ký và ghi rõ họ tên)</p>
+      <strong style="color: #4b5563; text-transform: uppercase;">Học sinh thực hiện</strong>
+      <p style="margin-top: 45px; margin-bottom: 0; font-weight: bold; color: #111827;">Nguyễn Gia Bảo</p>
+      <p style="color: #9ca3af; margin-top: 2px; font-size: 11px;">Lớp 8/2</p>
     </div>
     <div>
-      <strong style="color: #1f2937; text-transform: uppercase;">HIỆU TRƯỞNG NHÀ TRƯỜNG</strong>
-      <p style="color: #9ca3af; margin-top: 50px;">(Ký tên và đóng dấu duyệt)</p>
+      <strong style="color: #4b5563; text-transform: uppercase;">Giáo viên hướng dẫn</strong>
+      <p style="margin-top: 45px; margin-bottom: 0; font-weight: bold; color: #111827;">Cô Nguyễn Thị Hằng</p>
+      <p style="color: #9ca3af; margin-top: 2px; font-size: 11px;">THCS Lý Tự Trọng</p>
     </div>
   </div>
 </body>
@@ -328,14 +330,16 @@ export const AutoReport: React.FC = () => {
         </div>
 
         {/* Signature Area */}
-        <div className="grid grid-cols-2 pt-12 text-xs text-center">
+        <div className="grid grid-cols-2 pt-12 text-xs text-center border-t border-gray-50 mt-8">
           <div>
-            <p className="font-bold text-gray-500 uppercase">Đại diện Liên đội / Học sinh</p>
-            <p className="text-gray-400 mt-16">(Ký và ghi rõ họ tên)</p>
+            <p className="font-bold text-gray-500 uppercase tracking-wider">Học sinh thực hiện</p>
+            <p className="font-bold text-gray-800 mt-12 text-sm">Nguyễn Gia Bảo</p>
+            <p className="text-gray-400 text-[10px]">Lớp 8/2 • THCS Lý Tự Trọng</p>
           </div>
           <div>
-            <p className="font-bold text-gray-700 uppercase">HIỆU TRƯỞNG NHÀ TRƯỜNG</p>
-            <p className="text-gray-400 mt-16">(Ký tên và đóng dấu duyệt)</p>
+            <p className="font-bold text-gray-700 uppercase tracking-wider">Giáo viên hướng dẫn</p>
+            <p className="font-bold text-gray-800 mt-12 text-sm">Cô Nguyễn Thị Hằng</p>
+            <p className="text-gray-400 text-[10px]">THCS Lý Tự Trọng</p>
           </div>
         </div>
 

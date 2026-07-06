@@ -142,10 +142,14 @@ function AppContent() {
             ))}
           </nav>
 
-          <div className="border-t border-gray-50 pt-4 mt-6 text-center text-[10px] text-gray-400 font-semibold space-y-1">
+          <div className="border-t border-gray-50 pt-4 mt-6 text-center text-[10px] text-gray-400 font-semibold space-y-1.5">
             <p>© 2026 EcoCycle School</p>
-            <p>THCS Lý Tự Trọng</p>
+            <p className="text-emerald-800 font-bold">THCS Lý Tự Trọng</p>
             <p className="px-2 leading-relaxed text-[9px] text-gray-400 font-normal">578 LE DUC THO, AN HOI DONG WARD, HO CHI MINH CITY</p>
+            <div className="border-t border-gray-50 pt-2 mt-2 text-left text-[9px] text-gray-500 font-medium space-y-1 px-2 bg-emerald-50/10 py-1 rounded-lg">
+              <p>👤 <span className="font-semibold text-gray-600">HS:</span> Nguyễn Gia Bảo (Lớp 8/2)</p>
+              <p>👩‍🏫 <span className="font-semibold text-gray-600">GVHD:</span> Cô Nguyễn Thị Hằng</p>
+            </div>
           </div>
         </aside>
 
@@ -157,8 +161,13 @@ function AppContent() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-100 py-4 text-center text-[10px] text-gray-400 font-medium no-print space-y-1" id="app-footer">
+      <footer className="bg-white border-t border-gray-100 py-4 text-center text-[10px] text-gray-400 font-medium no-print space-y-2.5" id="app-footer">
         <p className="font-bold text-emerald-800 text-xs tracking-wide">🔬 PHỤC VỤ NGHIÊN CỨU KHOA HỌC ĐỀ TÀI: TÁI SỬ DỤNG PHỤ PHẨM NÔNG NGHIỆP THEO HƯỚNG KINH TẾ TUẦN HOÀN</p>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-xs text-gray-600 font-semibold bg-emerald-50/50 py-1.5 px-4 rounded-full max-w-fit mx-auto border border-emerald-100/40">
+          <span>👥 HS thực hiện: <strong className="text-emerald-800 font-bold">Nguyễn Gia Bảo</strong> (Lớp 8/2)</span>
+          <span className="hidden md:inline text-gray-300">|</span>
+          <span>🎓 GV hướng dẫn: <strong className="text-emerald-800 font-bold">Cô Nguyễn Thị Hằng</strong></span>
+        </div>
         <p>Hệ thống quản lý, mô phỏng &amp; đánh giá mô hình kinh tế tuần hoàn tại THCS Lý Tự Trọng • Phiên bản 1.0.0</p>
       </footer>
     </div>

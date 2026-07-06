@@ -42,6 +42,10 @@
   animation: pulse-ring 2s infinite ease-in-out;
 }
 
+#app-content-pane {
+  scroll-behavior: smooth;
+}
+
 @media print {
   .no-print {
     display: none !important;
